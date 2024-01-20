@@ -1,25 +1,18 @@
-import { useState,memo } from 'react'
-
-function App() {
-  const [count, setCount] = useState(0)
+import { useState } from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
+import user from "./store/atoms/countRecoil"
+import userid from "./store/selectors/Idselector"
+const App = () => {
+    const [count , setCount] = useState(0)
+    const [username , setUserName] = useRecoilState(user)
+    const uid = useRecoilValue(userid)
   return (
-  <div>
-    <ButtonComponent count={count} setCount={setCount}></ButtonComponent>
-    <Header title={count}></Header>
-    <Header title={"hola"}/>
-    <Header title={"hola"}/>
-    <Header title={"hola"}/>
-  </div>
+    <div>
+        <h1>{username.name}</h1>
+        <h1>{uid}</h1>
+        <button onClick={()=>setCount(count+1)}>Click-me : {count}</button>
+        <input type="text" onChange={(e)=>setUserName({...username , name:e.target.value})} />
+    </div>
   )
-}
-const Header = memo(function Header({title}){//when a parent component rerender it trigger all children to re-render and memo prevent that  - memo only rerender when the component has a dynamic component irrespective of it's parent render
-  return <>
-  <div>{title}</div></>
-});
-function ButtonComponent({count,setCount}){
-  function onClickHandler(){
-    setCount(count+1);
-  }
-  return <button onClick={onClickHandler}>hello{count}</button>
 }
 export default App
