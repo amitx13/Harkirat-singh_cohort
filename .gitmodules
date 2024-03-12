@@ -1,0 +1,3 @@
+[submodule "week-13-sql"]
+	path = week-13-sql
+	url = https://github.com/amitx13/harkirat-singh_cohort.git
