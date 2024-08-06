@@ -10,5 +10,21 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://prisma:password@localhost:5432/postgres"
+  url      = "postgresql://postgres:password@localhost:5432/postgres"
+}
+
+model Users {
+  Id Int @id @default(autoincrement())
+  Username String 
+  email String @unique
+  PhoneNumber Int?
+  password String
+}
+
+model Todo {
+  Id Int @id @default(autoincrement())
+  Title String 
+  Description String?
+  done Boolean @default(false)
+  user_id Int
 }
