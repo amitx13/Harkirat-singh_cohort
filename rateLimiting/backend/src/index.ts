@@ -1,11 +1,12 @@
 import express from "express";
+import cors from "cors";
 import rateLimit from "express-rate-limit";
-
+const SECRET_KEY ="0x4AAAAAAAiLvjA8xUgC_TCdrKEgMqSsHO4"
 const app = express();
 const PORT = 3000;
 
+app.use(cors());
 app.use(express.json());
-
 const otpStore:Record<string,string> = {}
 
 
@@ -40,12 +41,29 @@ app.post('/generate-otp', otpLimiter, (req, res) => {
   });
   
   // Endpoint to reset password
-  app.post('/reset-password', passwordResetLimiter, (req, res) => {
-    const { email, otp, newPassword } = req.body;
+  app.post('/reset-password', passwordResetLimiter, async(req, res) => {
+    console.log("Reached here")
+    const { email, otp, newPassword, token } = req.body;
+    console.log(token);
+  
+    let formData = new FormData();
+      formData.append('secret', SECRET_KEY);
+      formData.append('response', token);
+  
+    const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+      const result = await fetch(url, {
+          body: formData,
+          method: 'POST',
+      });
+      console.log("result",await result.json());
+    const challengeSucceeded = (await result.json()).success;
+  
+    if (!challengeSucceeded) {
+      return res.status(403).json({ message: "Invalid reCAPTCHA token" });
+    }
     if (!email || !otp || !newPassword) {
       return res.status(400).json({ message: "Email, OTP, and new password are required" });
     }
-    console.log("Reached here")
     if (otpStore[email] === otp) {
       console.log(`Password for ${email} has been reset to: ${newPassword}`);
       delete otpStore[email]; // Clear the OTP after use
