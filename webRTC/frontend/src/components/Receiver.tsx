@@ -88,13 +88,16 @@ export const Receiver = () => {
     }, []);
 
     function startReceiving(socket: WebSocket) {
-        const video = document.createElement('video');
-        document.body.appendChild(video);
 
         const pc = new RTCPeerConnection();
         pc.ontrack = (event) => {
+            const video = document.createElement('video');
+            video.controls = true
+            document.body.appendChild(video);
             video.srcObject = new MediaStream([event.track]);
-            video.play();
+            setTimeout(()=>{
+                video.play();
+            },3000)
         }
 
         socket.onmessage = (event) => {
