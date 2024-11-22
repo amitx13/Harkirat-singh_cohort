@@ -1,0 +1,19 @@
+{
+  "name": "r_ws_be",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/ws": "^8.5.13",
+    "express": "^4.21.1",
+    "ws": "^8.18.0"
+  }
+}
